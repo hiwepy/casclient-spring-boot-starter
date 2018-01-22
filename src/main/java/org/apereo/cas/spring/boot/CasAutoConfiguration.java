@@ -1,5 +1,9 @@
 package org.apereo.cas.spring.boot;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.jasig.cas.client.Protocol;
 import org.jasig.cas.client.authentication.AuthenticationFilter;
 import org.jasig.cas.client.authentication.Saml11AuthenticationFilter;
@@ -7,18 +11,19 @@ import org.jasig.cas.client.configuration.ConfigurationKeys;
 import org.jasig.cas.client.session.SingleSignOutFilter;
 import org.jasig.cas.client.session.SingleSignOutHttpSessionListener;
 import org.jasig.cas.client.util.AssertionThreadLocalFilter;
+import org.jasig.cas.client.util.ErrorRedirectFilter;
 import org.jasig.cas.client.util.HttpServletRequestWrapperFilter;
 import org.jasig.cas.client.validation.Cas10TicketValidationFilter;
 import org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter;
 import org.jasig.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter;
 import org.jasig.cas.client.validation.Saml11TicketValidationFilter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.StringUtils;
 
 @Configuration
 @ConditionalOnProperty(prefix = CasclientProperties.PREFIX, value = "enabled", havingValue = "true")
@@ -75,10 +80,9 @@ public class CasAutoConfiguration {
 	
 	
 	/**
-	 * 单点登录Session监听器
+	 * CAS Single Sign Out HttpSession Listener </br>
 	 */
-	@Bean("singleSignOutHttpSessionListener")
-	@ConditionalOnMissingBean(name = "singleSignOutHttpSessionListener")
+	@Bean
     public ServletListenerRegistrationBean<SingleSignOutHttpSessionListener> singleSignOutHttpSessionListener(CasclientProperties properties) {  
     	ServletListenerRegistrationBean<SingleSignOutHttpSessionListener> listener = new ServletListenerRegistrationBean<SingleSignOutHttpSessionListener>();
         listener.setEnabled(properties.isEnabled());  
@@ -88,7 +92,7 @@ public class CasAutoConfiguration {
     }  
     
 	/**
-	 * CAS SignOut Filter </br>
+	 * CAS Single Sign Out Filter </br>
 	 * 该过滤器用于实现单点登出功能，单点退出配置，一定要放在其他filter之前
 	 */
 	@Bean
@@ -97,9 +101,15 @@ public class CasAutoConfiguration {
 		filterRegistration.setFilter(new SingleSignOutFilter());
 		filterRegistration.setEnabled(properties.isEnabled());
 		
-		filterRegistration.addInitParameter(ConfigurationKeys.ARTIFACT_PARAMETER_NAME.getName(), properties.getArtifactParameterName());
-		filterRegistration.addInitParameter(ConfigurationKeys.LOGOUT_PARAMETER_NAME.getName(), properties.getLogoutParameterName());
-		filterRegistration.addInitParameter(ConfigurationKeys.RELAY_STATE_PARAMETER_NAME.getName(), properties.getRelayStateParameterName());
+		if(StringUtils.hasText(properties.getArtifactParameterName())) {	
+			filterRegistration.addInitParameter(ConfigurationKeys.ARTIFACT_PARAMETER_NAME.getName(), properties.getArtifactParameterName());
+		}
+		if(StringUtils.hasText(properties.getLogoutParameterName())) {	
+			filterRegistration.addInitParameter(ConfigurationKeys.LOGOUT_PARAMETER_NAME.getName(), properties.getLogoutParameterName());
+		}
+		if(StringUtils.hasText(properties.getRelayStateParameterName())) {	
+			filterRegistration.addInitParameter(ConfigurationKeys.RELAY_STATE_PARAMETER_NAME.getName(), properties.getRelayStateParameterName());
+		}
 		filterRegistration.addInitParameter(ConfigurationKeys.CAS_SERVER_URL_PREFIX.getName(), properties.getCasServerUrlPrefix());
 		filterRegistration.addInitParameter(ConfigurationKeys.ARTIFACT_PARAMETER_OVER_POST.getName(), Boolean.toString(properties.isArtifactParameterOverPost()));
 		filterRegistration.addInitParameter(ConfigurationKeys.EAGERLY_CREATE_SESSIONS.getName(), Boolean.toString(properties.isEagerlyCreateSessions()));
@@ -125,12 +135,18 @@ public class CasAutoConfiguration {
 			filterRegistration.setFilter(new AuthenticationFilter());
 		}
 
-		filterRegistration.addInitParameter(ConfigurationKeys.AUTHENTICATION_REDIRECT_STRATEGY_CLASS.getName(), properties.getAuthenticationRedirectStrategyClass());
+		if(StringUtils.hasText(properties.getAuthenticationRedirectStrategyClass())) {	
+			filterRegistration.addInitParameter(ConfigurationKeys.AUTHENTICATION_REDIRECT_STRATEGY_CLASS.getName(), properties.getAuthenticationRedirectStrategyClass());
+		}
 		filterRegistration.addInitParameter(ConfigurationKeys.CAS_SERVER_LOGIN_URL.getName(), properties.getCasServerLoginUrl());
 		filterRegistration.addInitParameter(ConfigurationKeys.ENCODE_SERVICE_URL.getName(), Boolean.toString(properties.isEncodeServiceUrl()));
 		filterRegistration.addInitParameter(ConfigurationKeys.GATEWAY.getName(), Boolean.toString(properties.isGateway()));
-		filterRegistration.addInitParameter(ConfigurationKeys.GATEWAY_STORAGE_CLASS.getName(), properties.getGatewayStorageClass());
-		filterRegistration.addInitParameter(ConfigurationKeys.IGNORE_PATTERN.getName(), properties.getIgnorePattern());
+		if(StringUtils.hasText(properties.getGatewayStorageClass())) {	
+			filterRegistration.addInitParameter(ConfigurationKeys.GATEWAY_STORAGE_CLASS.getName(), properties.getGatewayStorageClass());
+		}
+		if(StringUtils.hasText(properties.getIgnorePattern())) {
+			filterRegistration.addInitParameter(ConfigurationKeys.IGNORE_PATTERN.getName(), properties.getIgnorePattern());
+		}
 		filterRegistration.addInitParameter(ConfigurationKeys.IGNORE_URL_PATTERN_TYPE.getName(), properties.getIgnoreUrlPatternType().toString());
 		filterRegistration.addInitParameter(ConfigurationKeys.RENEW.getName(), Boolean.toString(properties.isRenew()));
 		filterRegistration.addInitParameter(ConfigurationKeys.SERVER_NAME.getName(), properties.getServerName());
@@ -158,26 +174,54 @@ public class CasAutoConfiguration {
 			
 			// Cas20ProxyReceivingTicketValidationFilter
 			filterRegistration.addInitParameter(ConfigurationKeys.ACCEPT_ANY_PROXY.getName(), Boolean.toString(properties.isAcceptAnyProxy()));
-			filterRegistration.addInitParameter(ConfigurationKeys.ALLOWED_PROXY_CHAINS.getName(), properties.getAllowedProxyChains());
+			if(StringUtils.hasText(properties.getAllowedProxyChains())) {	
+				filterRegistration.addInitParameter(ConfigurationKeys.ALLOWED_PROXY_CHAINS.getName(), properties.getAllowedProxyChains());
+			}
 			filterRegistration.addInitParameter(ConfigurationKeys.ARTIFACT_PARAMETER_OVER_POST.getName(), Boolean.toString(properties.isArtifactParameterOverPost()));
-			filterRegistration.addInitParameter(ConfigurationKeys.ARTIFACT_PARAMETER_NAME.getName(), properties.getArtifactParameterName());
-			filterRegistration.addInitParameter(ConfigurationKeys.AUTHENTICATION_REDIRECT_STRATEGY_CLASS.getName(), properties.getAuthenticationRedirectStrategyClass());
-			filterRegistration.addInitParameter(ConfigurationKeys.CIPHER_ALGORITHM.getName(), properties.getCipherAlgorithm());
+			if(StringUtils.hasText(properties.getArtifactParameterName())) {	
+				filterRegistration.addInitParameter(ConfigurationKeys.ARTIFACT_PARAMETER_NAME.getName(), properties.getArtifactParameterName());
+			}
+			if(StringUtils.hasText(properties.getAuthenticationRedirectStrategyClass())) {
+				filterRegistration.addInitParameter(ConfigurationKeys.AUTHENTICATION_REDIRECT_STRATEGY_CLASS.getName(), properties.getAuthenticationRedirectStrategyClass());
+			}
+			if(StringUtils.hasText(properties.getCipherAlgorithm())) {
+				filterRegistration.addInitParameter(ConfigurationKeys.CIPHER_ALGORITHM.getName(), properties.getCipherAlgorithm());
+			}
 			filterRegistration.addInitParameter(ConfigurationKeys.EAGERLY_CREATE_SESSIONS.getName(), Boolean.toString(properties.isEagerlyCreateSessions()));
 			filterRegistration.addInitParameter(ConfigurationKeys.GATEWAY.getName(), Boolean.toString(properties.isGateway()));
-			filterRegistration.addInitParameter(ConfigurationKeys.GATEWAY_STORAGE_CLASS.getName(), properties.getGatewayStorageClass());
+			if(StringUtils.hasText(properties.getGatewayStorageClass())) {
+				filterRegistration.addInitParameter(ConfigurationKeys.GATEWAY_STORAGE_CLASS.getName(), properties.getGatewayStorageClass());
+			}
 			filterRegistration.addInitParameter(ConfigurationKeys.IGNORE_CASE.getName(), Boolean.toString(properties.isIgnoreCase()));
-			filterRegistration.addInitParameter(ConfigurationKeys.IGNORE_PATTERN.getName(), properties.getIgnorePattern());
+			if(StringUtils.hasText(properties.getIgnorePattern())) {
+				filterRegistration.addInitParameter(ConfigurationKeys.IGNORE_PATTERN.getName(), properties.getIgnorePattern());
+			}
 			filterRegistration.addInitParameter(ConfigurationKeys.IGNORE_URL_PATTERN_TYPE.getName(), properties.getIgnoreUrlPatternType().toString());
-			filterRegistration.addInitParameter(ConfigurationKeys.LOGOUT_PARAMETER_NAME.getName(), properties.getLogoutParameterName());
+			if(StringUtils.hasText(properties.getLogoutParameterName())) {
+				filterRegistration.addInitParameter(ConfigurationKeys.LOGOUT_PARAMETER_NAME.getName(), properties.getLogoutParameterName());
+			}
 			filterRegistration.addInitParameter(ConfigurationKeys.MILLIS_BETWEEN_CLEAN_UPS.getName(), Long.toString(properties.getMillisBetweenCleanUps()));
-			filterRegistration.addInitParameter(ConfigurationKeys.PROXY_RECEPTOR_URL.getName(), properties.getProxyReceptorUrl());
-			filterRegistration.addInitParameter(ConfigurationKeys.PROXY_CALLBACK_URL.getName(), properties.getProxyCallbackUrl());
-			filterRegistration.addInitParameter(ConfigurationKeys.PROXY_GRANTING_TICKET_STORAGE_CLASS.getName(), properties.getProxyGrantingTicketStorageClass());
-			filterRegistration.addInitParameter(ConfigurationKeys.RELAY_STATE_PARAMETER_NAME.getName(), properties.getRelayStateParameterName());
-			filterRegistration.addInitParameter(ConfigurationKeys.ROLE_ATTRIBUTE.getName(), properties.getRoleAttribute());
-			filterRegistration.addInitParameter(ConfigurationKeys.SECRET_KEY.getName(), properties.getSecretKey());
-			filterRegistration.addInitParameter(ConfigurationKeys.TICKET_VALIDATOR_CLASS.getName(), properties.getTicketValidatorClass());
+			if(StringUtils.hasText(properties.getProxyReceptorUrl())) {
+				filterRegistration.addInitParameter(ConfigurationKeys.PROXY_RECEPTOR_URL.getName(), properties.getProxyReceptorUrl());
+			}
+			if(StringUtils.hasText(properties.getProxyCallbackUrl())) {
+				filterRegistration.addInitParameter(ConfigurationKeys.PROXY_CALLBACK_URL.getName(), properties.getProxyCallbackUrl());
+			}
+			if(StringUtils.hasText(properties.getProxyGrantingTicketStorageClass())) {
+				filterRegistration.addInitParameter(ConfigurationKeys.PROXY_GRANTING_TICKET_STORAGE_CLASS.getName(), properties.getProxyGrantingTicketStorageClass());
+			}
+			if(StringUtils.hasText(properties.getRelayStateParameterName())) {
+				filterRegistration.addInitParameter(ConfigurationKeys.RELAY_STATE_PARAMETER_NAME.getName(), properties.getRelayStateParameterName());
+			}
+			if(StringUtils.hasText(properties.getRoleAttribute())) {
+				filterRegistration.addInitParameter(ConfigurationKeys.ROLE_ATTRIBUTE.getName(), properties.getRoleAttribute());
+			}
+			if(StringUtils.hasText(properties.getSecretKey())) {
+				filterRegistration.addInitParameter(ConfigurationKeys.SECRET_KEY.getName(), properties.getSecretKey());
+			}
+			if(StringUtils.hasText(properties.getTicketValidatorClass())) {
+				filterRegistration.addInitParameter(ConfigurationKeys.TICKET_VALIDATOR_CLASS.getName(), properties.getTicketValidatorClass());
+			}
 			filterRegistration.addInitParameter(ConfigurationKeys.TOLERANCE.getName(), Long.toString(properties.getTolerance()));
 			
 		}
@@ -192,17 +236,27 @@ public class CasAutoConfiguration {
 		
 		// Cas10TicketValidationFilter、Cas20ProxyReceivingTicketValidationFilter、Cas30ProxyReceivingTicketValidationFilter、Saml11TicketValidationFilter
 		filterRegistration.addInitParameter(ConfigurationKeys.ENCODE_SERVICE_URL.getName(), Boolean.toString(properties.isEncodeServiceUrl()));
-		filterRegistration.addInitParameter(ConfigurationKeys.ENCODING.getName(), properties.getEncoding());
+		if(StringUtils.hasText(properties.getEncoding())) {	
+			filterRegistration.addInitParameter(ConfigurationKeys.ENCODING.getName(), properties.getEncoding());
+		}
 		filterRegistration.addInitParameter(ConfigurationKeys.EXCEPTION_ON_VALIDATION_FAILURE.getName(), Boolean.toString(properties.isExceptionOnValidationFailure()));
 		filterRegistration.addInitParameter(ConfigurationKeys.CAS_SERVER_LOGIN_URL.getName(), properties.getCasServerLoginUrl());
 		filterRegistration.addInitParameter(ConfigurationKeys.CAS_SERVER_URL_PREFIX.getName(), properties.getCasServerUrlPrefix());
-		filterRegistration.addInitParameter(ConfigurationKeys.HOSTNAME_VERIFIER.getName(), properties.getHostnameVerifier());
-		filterRegistration.addInitParameter(ConfigurationKeys.HOSTNAME_VERIFIER_CONFIG.getName(), properties.getHostnameVerifierConfig());
+		if(StringUtils.hasText(properties.getHostnameVerifier())) {	
+			filterRegistration.addInitParameter(ConfigurationKeys.HOSTNAME_VERIFIER.getName(), properties.getHostnameVerifier());
+		}
+		if(StringUtils.hasText(properties.getHostnameVerifierConfig())) {	
+			filterRegistration.addInitParameter(ConfigurationKeys.HOSTNAME_VERIFIER_CONFIG.getName(), properties.getHostnameVerifierConfig());
+		}
 		filterRegistration.addInitParameter(ConfigurationKeys.REDIRECT_AFTER_VALIDATION.getName(), Boolean.toString(properties.isRedirectAfterValidation()));
 		filterRegistration.addInitParameter(ConfigurationKeys.RENEW.getName(), Boolean.toString(properties.isRenew()));
 		filterRegistration.addInitParameter(ConfigurationKeys.SERVER_NAME.getName(), properties.getServerName());
-		filterRegistration.addInitParameter(ConfigurationKeys.SERVICE.getName(), properties.getServiceUrl());
-		filterRegistration.addInitParameter(ConfigurationKeys.SSL_CONFIG_FILE.getName(), properties.getSslConfigFile());
+		if(StringUtils.hasText(properties.getServiceUrl())) {	
+			filterRegistration.addInitParameter(ConfigurationKeys.SERVICE.getName(), properties.getServiceUrl());
+		}
+		if(StringUtils.hasText(properties.getSslConfigFile())) {
+			filterRegistration.addInitParameter(ConfigurationKeys.SSL_CONFIG_FILE.getName(), properties.getSslConfigFile());
+		}
 		filterRegistration.addInitParameter(ConfigurationKeys.USE_SESSION.getName(), Boolean.toString(properties.isUseSession()));
 		
 		filterRegistration.addUrlPatterns(properties.getTicketValidationFilterUrlPatterns());
@@ -220,7 +274,9 @@ public class CasAutoConfiguration {
 		filterRegistration.setFilter(new HttpServletRequestWrapperFilter());
 		filterRegistration.setEnabled(properties.isEnabled()); 
 		filterRegistration.addInitParameter(ConfigurationKeys.IGNORE_CASE.getName(), String.valueOf(properties.isIgnoreCase()));
-		filterRegistration.addInitParameter(ConfigurationKeys.ROLE_ATTRIBUTE.getName(), properties.getRoleAttribute());
+		if(StringUtils.hasText(properties.getRoleAttribute())) {	
+			filterRegistration.addInitParameter(ConfigurationKeys.ROLE_ATTRIBUTE.getName(), properties.getRoleAttribute());
+		}
 		filterRegistration.addUrlPatterns(properties.getRequestWrapperFilterUrlPatterns());
 		filterRegistration.setOrder(6);  
 	    return filterRegistration;
@@ -242,4 +298,28 @@ public class CasAutoConfiguration {
 		return filterRegistration;
 	}
 	
+	/**
+	 * CAS Error Redirect Filter </br>
+	 */
+	@Bean
+	public FilterRegistrationBean errorRedirectFilter(CasclientProperties properties) {
+		FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
+		filterRegistration.setFilter(new ErrorRedirectFilter());
+		filterRegistration.setEnabled(properties.isErrorRedirect());
+		
+		filterRegistration.addInitParameter("defaultErrorRedirectPage", properties.getDefaultErrorRedirectPage());
+		Map<String /* Class Name */, String /* Redirect Page Path */> errorRedirectMappings = properties.getErrorRedirectMappings();
+		if(errorRedirectMappings != null) {
+			Iterator<Entry<String, String>> ite = errorRedirectMappings.entrySet().iterator();
+			while (ite.hasNext()) {
+				Entry<String, String> entry = ite.next();
+				filterRegistration.addInitParameter(entry.getKey(), entry.getValue());
+			}
+		}
+		
+		filterRegistration.addUrlPatterns(properties.getErrorRedirectFilterUrlPatterns());
+		filterRegistration.setOrder(8);  
+		return filterRegistration;
+	}
+ 
 }
