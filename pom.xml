@@ -82,7 +82,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
 		</dependency>
-		
+		<!-- https://mvnrepository.com/artifact/org.codehaus.woodstox/woodstox-core-asl -->
+		<dependency>
+		    <groupId>org.codehaus.woodstox</groupId>
+		    <artifactId>woodstox-core-asl</artifactId>
+		    <version>4.4.1</version>
+		    <scope>runtime</scope>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jasig.cas.client/cas-client-core -->
 		<dependency>
 		    <groupId>org.jasig.cas.client</groupId>
