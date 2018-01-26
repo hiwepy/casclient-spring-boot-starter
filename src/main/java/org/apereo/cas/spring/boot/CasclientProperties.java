@@ -19,54 +19,44 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jasig.cas.client.Protocol;
-import org.jasig.cas.client.util.HttpServletRequestWrapperFilter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(CasclientProperties.PREFIX)
 public class CasclientProperties {
 
-	public static final String PREFIX = "cas";
+	public static final String PREFIX = "http.cas";
 
-	public static enum IgnoreUrlPatternType {
-		Contains {
-			@Override
-			public String toString() {
-				return "CONTAINS";
-			}
-		},
-		Regex {
-			@Override
-			public String toString() {
-				return "REGEX";
-			}
-		},
-		Exact {
-			@Override
-			public String toString() {
-				return "EXACT";
-			}
-		}
+	public static enum CaMode {
+		/** 中心认证：全部去认证中心进行认证. */
+		sso,
+		/** 单点漫游：可充认证中心登录，也可从其他入口登录. */
+		roam
 	}
 	
+	/** Ca Mode  */
+	private CaMode caMode = CaMode.sso;
 	/** DEFAULT,JNDI,WEB_XML,PROPERTY_FILE,SYSTEM_PROPERTIES */
 	private String configurationStrategy;
 	/** Defines the location of the CAS server login URL, i.e. https://localhost:8443/cas/login */
 	private String casServerLoginUrl;
+	/** Defines the location of the CAS server logout URL, i.e. https://localhost:8443/cas/logout */
+	private String casServerLogoutUrl;
+	/** Defines the location of the CAS server rest URL, i.e. https://localhost:8443/cas/v1/tickets */
+	private String casServerRestUrl;
 	/** The prefix url of the CAS server. i.e.https://localhost:8443/cas */
 	private String casServerUrlPrefix;
     /** Defaults to true */
 	private boolean eagerlyCreateSessions = true;
     /** Specifies whether any proxy is OK. Defaults to false. */
-	private boolean acceptAnyProxy = true;
+	private boolean acceptAnyProxy = false;
 	/**
 	 * Specifies the proxy chain. 
-	 * Each acceptable proxy chain should include a space-separated list of URLs (for exact match) or 
-	 * regular expressions of URLs (starting by the ^ character). 
+	 * Each acceptable proxy chain should include a space-separated list of URLs (for exact match) or regular expressions of URLs (starting by the ^ character). 
 	 * Each acceptable proxy chain should appear on its own line.
 	 */
 	private String allowedProxyChains;
 	/** Specifies the name of the request parameter on where to find the artifact (i.e. ticket). */
-	private String artifactParameterName;
+	private String artifactParameterName = "ticket";
 	private boolean artifactParameterOverPost = false;
 	/** The Url Patterns of AssertionThreadLocalFilter. */
 	private String[] assertionThreadLocalFilterUrlPatterns = new String[] { "/*" };
@@ -81,7 +71,7 @@ public class CasclientProperties {
 	/** Whether Enable Cas. */
 	private boolean enabled = false;
 	/** Specifies the encoding charset the client should use */
-	private String encoding;
+	private String encoding = "UTF-8";
 	/** Whether Enable ErrorRedirectFilter. */
 	private boolean errorRedirect = false;
 	/** The Url to redirect to, find the path by Fully qualified exception name , i.e. java.lang.Exception . */
@@ -92,6 +82,8 @@ public class CasclientProperties {
 	private boolean encodeServiceUrl = true;
 	/** Whether to throw an exception or not on ticket validation failure. Defaults to true. */
 	private boolean exceptionOnValidationFailure = true;
+	/** the url where the application is redirected if the CAS service ticket validation failed (example : /mycontextpatch/cas_error.jsp) */
+	private String failureUrl;
 	/** Specifies whether gateway=true should be sent to the CAS server. Valid values are either true/false (or no value at all) */
 	private boolean gateway = false;
 	/** The storage class used to record gateway requests */
@@ -104,7 +96,7 @@ public class CasclientProperties {
 	/** Defines the url pattern to ignore, when intercepting authentication requests. */
 	private String ignorePattern;
 	/** Defines the type of the pattern specified. Defaults to REGEX. Other types are CONTAINS, EXACT. */
-	private IgnoreUrlPatternType ignoreUrlPatternType = IgnoreUrlPatternType.Regex;
+	private String ignoreUrlPatternType = "REGEX";
 
 	private boolean ignoreInitConfiguration = false;
 	/** Defaults to logoutRequest */
@@ -141,14 +133,18 @@ public class CasclientProperties {
 	private String roleAttribute;
 	/** The secret key used by the proxyGrantingTicketStorageClass if it supports encryption. */
 	private String secretKey;
-	/** The service URL to send to the CAS server, i.e. https://localhost:8443/yourwebapp/index.html */
-	private String serviceUrl;
+	/** Defines the location of the application cas callback URL, i.e. /callback */
+	private String serverCallbackUrl;
 	/**
 	 * The name of the server this application is hosted on. 
 	 * Service URL will be dynamically constructed using this, 
 	 * i.e. https://localhost:8443 (you must include the protocol, but port is optional if it's a standard port).
 	 */
 	private String serverName;
+	/** The service URL to send to the CAS server, i.e. https://localhost:8443/yourwebapp/index.html */
+	private String service;
+	/** Specifies the name of the request parameter on where to find the service (i.e. service). */
+	private String serviceParameterName = "service";
 	/** The Url Patterns of SingleSignOutFilter. */
 	private String[] signOutFilterUrlPatterns = new String[] { "/*" };
 	/**
@@ -167,12 +163,20 @@ public class CasclientProperties {
 	 * Note that 10 seconds should be more than enough for most environments that have NTP time synchronization. 
 	 * Defaults to 1000 msec
 	 */
-	private long tolerance = 1000L;
+	private long tolerance = 5000L;
 	/**
 	 * Whether to store the Assertion in session or not. If sessions are not used,
 	 * tickets will be required for each request. Defaults to true.
 	 */
 	private boolean useSession = true;
+
+	public CaMode getCaMode() {
+		return caMode;
+	}
+
+	public void setCaMode(CaMode caMode) {
+		this.caMode = caMode;
+	}
 
 	public String getConfigurationStrategy() {
 		return configurationStrategy;
@@ -188,6 +192,22 @@ public class CasclientProperties {
 
 	public void setCasServerLoginUrl(String casServerLoginUrl) {
 		this.casServerLoginUrl = casServerLoginUrl;
+	}
+	
+	public String getCasServerLogoutUrl() {
+		return casServerLogoutUrl;
+	}
+
+	public void setCasServerLogoutUrl(String casServerLogoutUrl) {
+		this.casServerLogoutUrl = casServerLogoutUrl;
+	}
+
+	public String getCasServerRestUrl() {
+		return casServerRestUrl;
+	}
+
+	public void setCasServerRestUrl(String casServerRestUrl) {
+		this.casServerRestUrl = casServerRestUrl;
 	}
 
 	public String getCasServerUrlPrefix() {
@@ -334,6 +354,14 @@ public class CasclientProperties {
 		this.exceptionOnValidationFailure = exceptionOnValidationFailure;
 	}
 
+	public String getFailureUrl() {
+		return failureUrl;
+	}
+
+	public void setFailureUrl(String failureUrl) {
+		this.failureUrl = failureUrl;
+	}
+
 	public boolean isGateway() {
 		return gateway;
 	}
@@ -382,11 +410,11 @@ public class CasclientProperties {
 		this.ignorePattern = ignorePattern;
 	}
 
-	public IgnoreUrlPatternType getIgnoreUrlPatternType() {
+	public String getIgnoreUrlPatternType() {
 		return ignoreUrlPatternType;
 	}
 
-	public void setIgnoreUrlPatternType(IgnoreUrlPatternType ignoreUrlPatternType) {
+	public void setIgnoreUrlPatternType(String ignoreUrlPatternType) {
 		this.ignoreUrlPatternType = ignoreUrlPatternType;
 	}
 
@@ -494,12 +522,12 @@ public class CasclientProperties {
 		this.secretKey = secretKey;
 	}
 
-	public String getServiceUrl() {
-		return serviceUrl;
+	public String getServerCallbackUrl() {
+		return serverCallbackUrl;
 	}
 
-	public void setServiceUrl(String serviceUrl) {
-		this.serviceUrl = serviceUrl;
+	public void setServerCallbackUrl(String serverCallbackUrl) {
+		this.serverCallbackUrl = serverCallbackUrl;
 	}
 
 	public String getServerName() {
@@ -508,6 +536,14 @@ public class CasclientProperties {
 
 	public void setServerName(String serverName) {
 		this.serverName = serverName;
+	}
+	
+	public String getService() {
+		return service;
+	}
+
+	public void setService(String service) {
+		this.service = service;
 	}
 
 	public String[] getSignOutFilterUrlPatterns() {
@@ -556,6 +592,14 @@ public class CasclientProperties {
 
 	public void setUseSession(boolean useSession) {
 		this.useSession = useSession;
+	}
+
+	public String getServiceParameterName() {
+		return serviceParameterName;
+	}
+
+	public void setServiceParameterName(String serviceParameterName) {
+		this.serviceParameterName = serviceParameterName;
 	}
 	
 
