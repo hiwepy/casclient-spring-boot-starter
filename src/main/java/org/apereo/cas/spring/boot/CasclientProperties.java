@@ -24,7 +24,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(CasclientProperties.PREFIX)
 public class CasclientProperties {
 
-	public static final String PREFIX = "http.cas";
+	public static final String PREFIX = "cas";
 
 	public static enum CaMode {
 		/** 中心认证：全部去认证中心进行认证. */

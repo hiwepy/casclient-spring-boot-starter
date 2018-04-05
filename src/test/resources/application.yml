@@ -1,3 +1,4 @@
 cas:
   cas-server-login-url: 
   proxy-granting-ticket-storage-class: org.jasig.cas.client.proxy.EhcacheBackedProxyGrantingTicketStorageImpl
+  
