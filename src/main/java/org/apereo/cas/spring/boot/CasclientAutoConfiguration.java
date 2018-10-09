@@ -35,7 +35,7 @@ public class CasclientAutoConfiguration {
 	@Autowired
 	private CasclientProperties casProperties;
 
-	/**
+	/*
 	1、首先定义CasConfiguration(loginUrl,prefixUrl),loginUrl为完整的cas登录地址,比如client项目的https://passport.sqzryang.com/login?service=https://client.sqzryang.com,prefixUrl则为cas路径前缀,根据cas的版本号拼接请求地址,用于验证sts是否正确并且返回登录成功后的信息。
 	2、定义CasClient,property configuration(CasConfiguration) and callbackUrl(String),在pac4j中,每一个client相当于一种认证协议,比如我们需要weibo登录则应该配置一个WeiboClient,具体回掉的时候应该采用哪个client进行验证授权则需要下面配置的Clients
 	3、定义Clients,在这里面可以定义你所有的Client以及默认的client还有关于如何区分回掉的哪个client应该取某个参数的配置,具体详细看源码
@@ -43,7 +43,7 @@ public class CasclientAutoConfiguration {
 	5、以上四个都是pac4j的配置,接下来配置一个由buji-pac4j提供用于和shiro结合的filter:CallbackFilter,直接传入config即可
 	6、定义好CallbackFilter以后,在ShiroFilterFactoryBean中注册好filters,并且配置好filterChainDefinitions
     */
-	/**
+	/*
 	 * 1、首先定义CasConfiguration(loginUrl,prefixUrl),loginUrl为完整的cas登录地址,
 	 * 比如client项目的https://passport.sqzryang.com/login?service=https://client.sqzryang.com,
 	 * prefixUrl则为cas路径前缀,根据cas的版本号拼接请求地址,用于验证sts是否正确并且返回登录成功后的信息。
@@ -52,14 +52,14 @@ public class CasclientAutoConfiguration {
 		return casConfiguration(loginUrl, prefixUrl);
 	}*/
 	
-	/**
+	/*
 	 * 2、定义CasClient,property configuration(CasConfiguration) and callbackUrl(String),
 	 * 在pac4j中,每一个client相当于一种认证协议,比如我们需要weibo登录则应该配置一个WeiboClient,
 	 * 具体回掉的时候应该采用哪个client进行验证授权则需要下面配置的Clients
 	 */
 	
 	
-	/**
+	/*
 	 * 单点登录Session监听器
 	 */
 	@Bean
@@ -70,7 +70,7 @@ public class CasclientAutoConfiguration {
 		return registration;
 	}
 
-	/**
+	/*
 	 * CAS Error Redirect Filter </br>
 	 */
 	@Bean
@@ -95,7 +95,7 @@ public class CasclientAutoConfiguration {
 		return filterRegistration;
 	}
 	
-	/**
+	/*
 	 * CAS SignOut Filter </br>
 	 * 该过滤器用于实现单点登出功能，单点退出配置，一定要放在其他filter之前
 	 */
@@ -123,7 +123,7 @@ public class CasclientAutoConfiguration {
 		return filterRegistration;
 	}
 
-	/**
+	/*
 	 * CAS Ticket Validation Filter </br>
 	 * 该过滤器负责对Ticket的校验工作
 	 */
@@ -232,7 +232,7 @@ public class CasclientAutoConfiguration {
 	    return filterRegistration;
 	}
 	
-	/**
+	/*
 	 * CAS Authentication Filter </br>
 	 * 该过滤器负责用户的认证工作
 	 */
@@ -270,7 +270,7 @@ public class CasclientAutoConfiguration {
 		return filterRegistration;
 	}
 
-	/**
+	/*
 	 * CAS HttpServletRequest Wrapper Filter </br>
 	 * 该过滤器对HttpServletRequest请求包装， 可通过HttpServletRequest的getRemoteUser()方法获得登录用户的登录名
 	 */
@@ -288,7 +288,7 @@ public class CasclientAutoConfiguration {
 	    return filterRegistration;
 	}
 
-	/**
+	/*
 	 * CAS Assertion Thread Local Filter </br>
 	 * 该过滤器使得可以通过org.jasig.cas.client.util.AssertionHolder来获取用户的登录名。
 	 * 比如AssertionHolder.getAssertion().getPrincipal().getName()。
