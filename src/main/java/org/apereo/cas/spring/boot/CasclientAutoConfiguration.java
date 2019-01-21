@@ -19,6 +19,7 @@ import org.jasig.cas.client.validation.Cas20ProxyReceivingTicketValidationFilter
 import org.jasig.cas.client.validation.Cas30ProxyReceivingTicketValidationFilter;
 import org.jasig.cas.client.validation.Saml11TicketValidationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -28,6 +29,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
 @Configuration
+@ConditionalOnClass(AuthenticationFilter.class)
 @ConditionalOnProperty(prefix = CasclientProperties.PREFIX, value = "enabled", havingValue = "true")
 @EnableConfigurationProperties({ CasclientProperties.class })
 public class CasclientAutoConfiguration {
