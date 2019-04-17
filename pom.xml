@@ -372,7 +372,74 @@
         <maven-resources-plugin.version>3.1.0</maven-resources-plugin.version>
         <maven-surefire-plugin.vertsion>2.22.1</maven-surefire-plugin.vertsion>
 		<maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
+		<woodstox-asl.version>4.4.1</woodstox-asl.version>
 	</properties>
+	
+	<dependencyManagement>
+		<dependencies>
+			<!-- https://mvnrepository.com/artifact/org.codehaus.woodstox/woodstox-core-asl -->
+			<dependency>
+			    <groupId>org.codehaus.woodstox</groupId>
+			    <artifactId>woodstox-core-asl</artifactId>
+			    <version>${woodstox-asl.version}</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.jasig.cas.client/cas-client-core -->
+			<dependency>
+			    <groupId>org.jasig.cas.client</groupId>
+			    <artifactId>cas-client-core</artifactId>
+			    <version>${cas-client.version}</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.jasig.cas.client/cas-client-support-saml -->
+			<dependency>
+			    <groupId>org.jasig.cas.client</groupId>
+			    <artifactId>cas-client-support-saml</artifactId>
+			    <version>${cas-client.version}</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.jasig.cas.client/cas-client-support-distributed-memcached -->
+			<dependency>
+			    <groupId>org.jasig.cas.client</groupId>
+			    <artifactId>cas-client-support-distributed-memcached</artifactId>
+			    <version>${cas-client.version}</version>
+			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.jasig.cas.client/cas-client-support-distributed-ehcache -->
+			<dependency>
+			    <groupId>org.jasig.cas.client</groupId>
+			    <artifactId>cas-client-support-distributed-ehcache</artifactId>
+			    <version>${cas-client.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.jasig.cas.client</groupId>
+			    <artifactId>cas-client-integration-jboss</artifactId>
+			    <version>${cas-client.version}</version>
+			</dependency> 
+			<dependency>
+			    <groupId>org.jasig.cas.client</groupId>
+			    <artifactId>cas-client-integration-jetty</artifactId>
+			   <version>${cas-client.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.jasig.cas.client</groupId>
+			    <artifactId>cas-client-integration-tomcat-v6</artifactId>
+			    <version>${cas-client.version}</version>
+			</dependency> 
+			<dependency>
+			    <groupId>org.jasig.cas.client</groupId>
+			    <artifactId>cas-client-integration-tomcat-v7</artifactId>
+			    <version>${cas-client.version}</version>
+			</dependency>
+			 <dependency>
+			    <groupId>org.jasig.cas.client</groupId>
+			    <artifactId>cas-client-integration-tomcat-v8</artifactId>
+			    <version>${cas-client.version}</version>
+			</dependency>
+			<dependency>
+			    <groupId>org.jasig.cas.client</groupId>
+			    <artifactId>cas-client-integration-tomcat-v85</artifactId>
+			    <version>${cas-client.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	
 
 	<dependencies>
 
@@ -422,68 +489,35 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-autoconfigure</artifactId>
 		</dependency>
+		
 		<!-- https://mvnrepository.com/artifact/org.codehaus.woodstox/woodstox-core-asl -->
 		<dependency>
 		    <groupId>org.codehaus.woodstox</groupId>
 		    <artifactId>woodstox-core-asl</artifactId>
-		    <version>4.4.1</version>
-		    <scope>runtime</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jasig.cas.client/cas-client-core -->
 		<dependency>
 		    <groupId>org.jasig.cas.client</groupId>
 		    <artifactId>cas-client-core</artifactId>
-		    <version>${cas-client.version}</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jasig.cas.client/cas-client-support-saml -->
 		<dependency>
 		    <groupId>org.jasig.cas.client</groupId>
 		    <artifactId>cas-client-support-saml</artifactId>
-		    <version>${cas-client.version}</version>
+		    <optional>true</optional>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jasig.cas.client/cas-client-support-distributed-memcached -->
 		<dependency>
 		    <groupId>org.jasig.cas.client</groupId>
 		    <artifactId>cas-client-support-distributed-memcached</artifactId>
-		    <version>${cas-client.version}</version>
+		    <optional>true</optional>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jasig.cas.client/cas-client-support-distributed-ehcache -->
 		<dependency>
 		    <groupId>org.jasig.cas.client</groupId>
 		    <artifactId>cas-client-support-distributed-ehcache</artifactId>
-		    <version>${cas-client.version}</version>
+		    <optional>true</optional>
 		</dependency>
-		<!-- 
-		<dependency>
-		    <groupId>org.jasig.cas.client</groupId>
-		    <artifactId>cas-client-integration-jboss</artifactId>
-		    <version>${cas-client.version}</version>
-		</dependency> 
-		<dependency>
-		    <groupId>org.jasig.cas.client</groupId>
-		    <artifactId>cas-client-integration-jetty</artifactId>
-		   <version>${cas-client.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.jasig.cas.client</groupId>
-		    <artifactId>cas-client-integration-tomcat-v6</artifactId>
-		    <version>${cas-client.version}</version>
-		</dependency> 
-		<dependency>
-		    <groupId>org.jasig.cas.client</groupId>
-		    <artifactId>cas-client-integration-tomcat-v7</artifactId>
-		    <version>${cas-client.version}</version>
-		</dependency>
-		 <dependency>
-		    <groupId>org.jasig.cas.client</groupId>
-		    <artifactId>cas-client-integration-tomcat-v8</artifactId>
-		    <version>${cas-client.version}</version>
-		</dependency>
-		<dependency>
-		    <groupId>org.jasig.cas.client</groupId>
-		    <artifactId>cas-client-integration-tomcat-v85</artifactId>
-		    <version>${cas-client.version}</version>
-		</dependency> -->
 
 	</dependencies>
 
