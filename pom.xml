@@ -364,7 +364,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cas-client.version>3.5.1</cas-client.version>
+		<cas-client.version>3.6.1</cas-client.version>
 		<maven.version>3.0</maven.version>
        	<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
@@ -524,6 +524,13 @@
 		    <groupId>org.jasig.cas.client</groupId>
 		    <artifactId>cas-client-support-distributed-ehcache</artifactId>
 		    <optional>true</optional>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/org.jasig.cas.client/cas-client-support-springboot -->
+		<dependency>
+		    <groupId>org.jasig.cas.client</groupId>
+		    <artifactId>cas-client-support-springboot</artifactId>
+		    <version>3.6.1</version>
 		</dependency>
 
 	</dependencies>
