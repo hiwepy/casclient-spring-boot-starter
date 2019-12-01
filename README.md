@@ -1,5 +1,5 @@
-# spring-boot-starter-casclient
-casclient starter for spring boot
+# casclient-spring-boot-starter
+Spring Boot Starter For Casclient
 
 ### 说明
 
@@ -13,7 +13,7 @@ casclient starter for spring boot
 ``` xml
 <dependency>
 	<groupId>${project.groupId}</groupId>
-	<artifactId>spring-boot-starter-casclient</artifactId>
+	<artifactId>casclient-spring-boot-starter</artifactId>
 	<version>${project.version}</version>
 </dependency>
 ```
