@@ -14,7 +14,7 @@ Spring Boot Starter For Casclient
 <dependency>
 	<groupId>${project.groupId}</groupId>
 	<artifactId>casclient-spring-boot-starter</artifactId>
-	<version>${project.version}</version>
+	<version>1.0.3.RELEASE</version>
 </dependency>
 ```
 
