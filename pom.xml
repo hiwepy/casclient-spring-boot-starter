@@ -358,7 +358,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<cas-client.version>3.6.1</cas-client.version>
+		<cas-client.version>3.6.4</cas-client.version>
 		<maven.version>3.0</maven.version>
        	<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <maven-jar-plugin.version>3.1.1</maven-jar-plugin.version>
@@ -399,36 +399,6 @@
 			<dependency>
 			    <groupId>org.jasig.cas.client</groupId>
 			    <artifactId>cas-client-support-distributed-ehcache</artifactId>
-			    <version>${cas-client.version}</version>
-			</dependency>
-			<dependency>
-			    <groupId>org.jasig.cas.client</groupId>
-			    <artifactId>cas-client-integration-jboss</artifactId>
-			    <version>${cas-client.version}</version>
-			</dependency>
-			<dependency>
-			    <groupId>org.jasig.cas.client</groupId>
-			    <artifactId>cas-client-integration-jetty</artifactId>
-			   <version>${cas-client.version}</version>
-			</dependency>
-			<dependency>
-			    <groupId>org.jasig.cas.client</groupId>
-			    <artifactId>cas-client-integration-tomcat-v6</artifactId>
-			    <version>${cas-client.version}</version>
-			</dependency>
-			<dependency>
-			    <groupId>org.jasig.cas.client</groupId>
-			    <artifactId>cas-client-integration-tomcat-v7</artifactId>
-			    <version>${cas-client.version}</version>
-			</dependency>
-			 <dependency>
-			    <groupId>org.jasig.cas.client</groupId>
-			    <artifactId>cas-client-integration-tomcat-v8</artifactId>
-			    <version>${cas-client.version}</version>
-			</dependency>
-			<dependency>
-			    <groupId>org.jasig.cas.client</groupId>
-			    <artifactId>cas-client-integration-tomcat-v85</artifactId>
 			    <version>${cas-client.version}</version>
 			</dependency>
 		</dependencies>
@@ -518,13 +488,6 @@
 		    <groupId>org.jasig.cas.client</groupId>
 		    <artifactId>cas-client-support-distributed-ehcache</artifactId>
 		    <optional>true</optional>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/org.jasig.cas.client/cas-client-support-springboot -->
-		<dependency>
-		    <groupId>org.jasig.cas.client</groupId>
-		    <artifactId>cas-client-support-springboot</artifactId>
-		    <version>3.6.1</version>
 		</dependency>
 
 	</dependencies>
