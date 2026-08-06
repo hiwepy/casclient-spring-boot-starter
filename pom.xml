@@ -422,6 +422,7 @@
         <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
         <maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
         <woodstox-asl.version>4.4.1</woodstox-asl.version>
+                <cas-client-support-springboot.version>3.6.1</cas-client-support-springboot.version>
     </properties>
     
     <dependencyManagement>
@@ -493,7 +494,12 @@
                 <artifactId>cas-client-integration-tomcat-v85</artifactId>
                 <version>${cas-client.version}</version>
             </dependency>
-        </dependencies>
+                <dependency>
+            <groupId>org.jasig.cas.client</groupId>
+            <artifactId>cas-client-support-springboot</artifactId>
+            <version>${cas-client-support-springboot.version}</version>
+        </dependency>
+</dependencies>
     </dependencyManagement>
     
 
@@ -592,7 +598,7 @@
         <dependency>
             <groupId>org.jasig.cas.client</groupId>
             <artifactId>cas-client-support-springboot</artifactId>
-            <version>3.6.1</version>
+            <version>${cas-client-support-springboot.version}</version>
         </dependency>
 
     </dependencies>
