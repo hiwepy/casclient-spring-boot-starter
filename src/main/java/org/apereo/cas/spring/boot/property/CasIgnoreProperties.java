@@ -21,6 +21,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Configuration properties controlling which URLs the CAS filters should ignore, bound
+ * to the {@code cas.ignore} prefix.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @ConfigurationProperties(CasIgnoreProperties.PREFIX)
 @Getter
 @Setter

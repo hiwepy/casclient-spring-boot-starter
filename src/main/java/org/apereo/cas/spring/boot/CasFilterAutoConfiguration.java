@@ -36,14 +36,29 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
 
+/**
+ * Spring Boot auto-configuration that registers the Apereo CAS client servlet filters
+ * (single sign-out, error redirect, ticket validation, authentication, request wrapper
+ * and assertion thread-local) and the single sign-out HTTP session listener.
+ * <p>
+ * Each filter is registered as a {@link FilterRegistrationBean} with an explicit order so
+ * the CAS filter chain executes in the correct sequence. The configuration is activated
+ * only when the CAS {@code AuthenticationFilter} is on the classpath and CAS integration
+ * is explicitly enabled.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @Configuration
 @ConditionalOnClass(AuthenticationFilter.class)
 @ConditionalOnProperty(prefix = CasProperties.PREFIX, value = "enabled", havingValue = "true")
 @EnableConfigurationProperties({ CasProperties.class })
 public class CasFilterAutoConfiguration {
-	
-	/*
-	 * 单点登录Session监听器
+
+	/**
+	 * Registers the single sign-out HTTP session listener.
+	 * @return a {@link ServletListenerRegistrationBean} wrapping a
+	 *         {@link SingleSignOutHttpSessionListener}, ordered first
 	 */
 	@Bean
 	public ServletListenerRegistrationBean<SingleSignOutHttpSessionListener> singleSignOutHttpSessionListener() {
@@ -53,8 +68,11 @@ public class CasFilterAutoConfiguration {
 		return registration;
 	}
 
-	/*
-	 * CAS Error Redirect Filter
+	/**
+	 * Registers the CAS {@link ErrorRedirectFilter} that redirects exceptions thrown
+	 * during request processing to configured error pages.
+	 * @param casErrorProperties the CAS error-handling configuration properties
+	 * @return a {@link FilterRegistrationBean} for the {@link ErrorRedirectFilter}
 	 */
 	@Bean
 	public FilterRegistrationBean<ErrorRedirectFilter> errorRedirectFilter(CasErrorProperties casErrorProperties) {
@@ -78,9 +96,14 @@ public class CasFilterAutoConfiguration {
 		return filterRegistration;
 	}
 	
-	/*
-	 * 	CAS SignOut Filter
-	 * 	该过滤器用于实现单点登出功能，单点退出配置，一定要放在其他filter之前
+	/**
+	 * Registers the CAS {@link SingleSignOutFilter} that implements single sign-out.
+	 * <p>
+	 * This filter must run before the other CAS filters so that logout requests from the
+	 * CAS server invalidate the local session.</p>
+	 * @param casProperties the CAS configuration properties
+	 * @param casSsoProperties the CAS single sign-out configuration properties
+	 * @return a {@link FilterRegistrationBean} for the {@link SingleSignOutFilter}
 	 */
 	@Bean
 	public FilterRegistrationBean<SingleSignOutFilter> singleSignOutFilter(CasProperties casProperties,
@@ -109,9 +132,15 @@ public class CasFilterAutoConfiguration {
 		return filterRegistration;
 	}
 
-	/*
-	 * 	CAS Ticket Validation Filter
-	 * 	该过滤器负责对Ticket的校验工作
+	/**
+	 * Registers the CAS ticket validation filter responsible for validating the service
+	 * ticket returned by the CAS server.
+	 * <p>
+	 * The concrete filter implementation (CAS 1.0, CAS 2.0 proxy, CAS 3.0 proxy or SAML
+	 * 1.1) is selected based on the configured {@link CasProperties.CasProtocol}.</p>
+	 * @param casProperties the CAS configuration properties
+	 * @param casTicketProperties the CAS ticket-validation configuration properties
+	 * @return a {@link FilterRegistrationBean} for the {@link AbstractTicketValidationFilter}
 	 */
 	@Bean
 	public FilterRegistrationBean<AbstractTicketValidationFilter> ticketValidationFilter(CasProperties casProperties,
@@ -124,8 +153,8 @@ public class CasFilterAutoConfiguration {
 		else if(CasProtocol.CAS20_PROXY.equals(casProperties.getProtocol())) {
 			
 			filterRegistration.setFilter(new Cas20ProxyReceivingTicketValidationFilter());
-			
-			// Cas20ProxyReceivingTicketValidationFilter
+
+			// CAS 2.0 proxy-receiving ticket validation parameters
 			filterRegistration.addInitParameter(ConfigurationKeys.ACCEPT_ANY_PROXY.getName(), Boolean.toString(casProperties.isAcceptAnyProxy()));
 			if(StringUtils.hasText(casProperties.getAllowedProxyChains())) {	
 				filterRegistration.addInitParameter(ConfigurationKeys.ALLOWED_PROXY_CHAINS.getName(), casProperties.getAllowedProxyChains());
@@ -183,11 +212,11 @@ public class CasFilterAutoConfiguration {
 		}
 		else if(CasProtocol.SAML.equals(casProperties.getProtocol())) {
 			filterRegistration.setFilter(new Saml11TicketValidationFilter());
-			// Saml11TicketValidationFilter
+			// SAML 1.1 ticket validation parameters
 			filterRegistration.addInitParameter(ConfigurationKeys.TOLERANCE.getName(), Long.toString(casTicketProperties.getTolerance()));
 		}
-		
-		// Cas10TicketValidationFilter、Cas20ProxyReceivingTicketValidationFilter、Cas30ProxyReceivingTicketValidationFilter、Saml11TicketValidationFilter
+
+		// Common parameters applied to all ticket validation filters
 		filterRegistration.addInitParameter(ConfigurationKeys.ENCODE_SERVICE_URL.getName(), Boolean.toString(casProperties.isEncodeServiceUrl()));
 		if(StringUtils.hasText(casProperties.getEncoding())) {	
 			filterRegistration.addInitParameter(ConfigurationKeys.ENCODING.getName(), casProperties.getEncoding());
@@ -218,12 +247,18 @@ public class CasFilterAutoConfiguration {
 	    return filterRegistration;
 	}
 	
-	/*
-	 * 	CAS Authentication Filter
-	 * 	该过滤器负责用户的认证工作
+	/**
+	 * Registers the CAS authentication filter responsible for ensuring the user is
+	 * authenticated, redirecting unauthenticated requests to the CAS login page.
+	 * @param casProperties the CAS configuration properties
+	 * @param casAuthcProperties the CAS authentication configuration properties
+	 * @param gatewayStorage the gateway resolver used to track gateway requests
+	 * @param ignoreUrlPatternMatcherStrategy the strategy used to skip URLs from
+	 *        authentication
+	 * @return a {@link FilterRegistrationBean} for the {@link AuthenticationFilter}
 	 */
 	@Bean
-	public FilterRegistrationBean<AuthenticationFilter> authenticationFilter(CasProperties casProperties, 
+	public FilterRegistrationBean<AuthenticationFilter> authenticationFilter(CasProperties casProperties,
 			CasAuthcProperties casAuthcProperties,
 			GatewayResolver gatewayStorage, UrlPatternMatcherStrategy ignoreUrlPatternMatcherStrategy) {
 		FilterRegistrationBean<AuthenticationFilter> filterRegistration = new FilterRegistrationBean<AuthenticationFilter>();
@@ -234,10 +269,8 @@ public class CasFilterAutoConfiguration {
 		} else {
 			authenticationFilter = new AuthenticationFilter();
 		}
-		
-		/**
-		 * 	批量设置参数
-		 */
+
+		// Map CAS properties onto the authentication filter in a single pass.
 		PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		
 		map.from(casProperties.getLoginUrl()).to(authenticationFilter::setCasServerLoginUrl);
@@ -257,9 +290,12 @@ public class CasFilterAutoConfiguration {
 		return filterRegistration;
 	}
 
-	/*
-	 * 	CAS HttpServletRequest Wrapper Filter
-	 * 	该过滤器对HttpServletRequest请求包装， 可通过HttpServletRequest的getRemoteUser()方法获得登录用户的登录名
+	/**
+	 * Registers the CAS {@link HttpServletRequestWrapperFilter} that wraps the request so
+	 * the authenticated user can be retrieved via
+	 * {@code HttpServletRequest#getRemoteUser()}.
+	 * @param casWrapperProperties the CAS request-wrapper configuration properties
+	 * @return a {@link FilterRegistrationBean} for the {@link HttpServletRequestWrapperFilter}
 	 */
 	@Bean
 	public FilterRegistrationBean<HttpServletRequestWrapperFilter> requestWrapperFilter(CasWrapperProperties casWrapperProperties) {
@@ -276,11 +312,13 @@ public class CasFilterAutoConfiguration {
 	    return filterRegistration;
 	}
 
-	/*
-	 * 	CAS Assertion Thread Local Filter
-	 * 	该过滤器使得可以通过org.jasig.cas.client.util.AssertionHolder来获取用户的登录名。
-	 * 	比如AssertionHolder.getAssertion().getPrincipal().getName()。
-	 * 	这个类把Assertion信息放在ThreadLocal变量中，这样应用程序不在web层也能够获取到当前登录信息
+	/**
+	 * Registers the CAS {@link AssertionThreadLocalFilter} that exposes the current
+	 * authentication {@code Assertion} through {@code AssertionHolder}, so non-web layers
+	 * can access the logged-in principal (for example via
+	 * {@code AssertionHolder.getAssertion().getPrincipal().getName()}).
+	 * @param casAssertionProperties the CAS assertion configuration properties
+	 * @return a {@link FilterRegistrationBean} for the {@link AssertionThreadLocalFilter}
 	 */
 	@Bean
 	public FilterRegistrationBean<AssertionThreadLocalFilter> assertionThreadLocalFilter(CasAssertionProperties casAssertionProperties) {

@@ -21,6 +21,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Configuration properties for the CAS {@code HttpServletRequestWrapperFilter}, bound to
+ * the {@code cas.wrapper} prefix.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @ConfigurationProperties(CasWrapperProperties.PREFIX)
 @Getter
 @Setter

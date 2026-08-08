@@ -22,6 +22,16 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Configuration properties for the Apereo CAS client integration, bound to the
+ * {@code cas} prefix.
+ * <p>
+ * These properties drive the core CAS client behavior shared across the authentication,
+ * ticket-validation and single sign-out filters.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @ConfigurationProperties(CasProperties.PREFIX)
 @Getter
 @Setter
@@ -40,7 +50,8 @@ public class CasProperties {
 	public static final String PREFIX = "cas";
 
 	/**
-	 * CAS protocol.
+	 * Supported CAS protocols, used to select the appropriate ticket validation and
+	 * authentication filters.
 	 */
 	public static enum CasProtocol {
 		CAS10, CAS20, CAS20_PROXY, CAS30, CAS30_PROXY, SAML

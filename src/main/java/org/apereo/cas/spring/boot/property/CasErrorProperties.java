@@ -24,6 +24,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Configuration properties for the CAS {@code ErrorRedirectFilter}, bound to the
+ * {@code cas.error} prefix.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @ConfigurationProperties(CasErrorProperties.PREFIX)
 @Getter
 @Setter

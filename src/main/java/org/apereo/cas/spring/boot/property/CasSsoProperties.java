@@ -21,6 +21,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Configuration properties for the CAS single sign-out filter, bound to the
+ * {@code cas.sso} prefix.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @ConfigurationProperties(CasSsoProperties.PREFIX)
 @Getter
 @Setter

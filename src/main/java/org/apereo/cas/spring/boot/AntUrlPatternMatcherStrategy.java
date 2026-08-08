@@ -19,6 +19,16 @@ import org.jasig.cas.client.authentication.UrlPatternMatcherStrategy;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 
+/**
+ * {@link UrlPatternMatcherStrategy} implementation that matches request URLs against
+ * Spring Ant-style path patterns.
+ * <p>
+ * Multiple patterns may be supplied at once using the configured delimiters; the URL is
+ * considered matched when it matches any one of the supplied patterns.</p>
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 public class AntUrlPatternMatcherStrategy implements UrlPatternMatcherStrategy {
 
 	/**
@@ -29,6 +39,11 @@ public class AntUrlPatternMatcherStrategy implements UrlPatternMatcherStrategy {
 	private AntPathMatcher matcher = new AntPathMatcher();
 	private String[] patterns;
 
+	/**
+	 * Returns whether the given {@code url} matches any of the configured Ant patterns.
+	 * @param url the request URL to evaluate
+	 * @return {@code true} if the URL matches at least one pattern, {@code false} otherwise
+	 */
 	@Override
 	public boolean matches(String url) {
 		for (String pattern : patterns) {
@@ -39,6 +54,11 @@ public class AntUrlPatternMatcherStrategy implements UrlPatternMatcherStrategy {
 		return false;
 	}
 
+	/**
+	 * Sets the Ant-style URL pattern(s) to match against, tokenizing the supplied
+	 * string using {@link #CONFIG_LOCATION_DELIMITERS}.
+	 * @param pattern the delimited pattern string
+	 */
 	@Override
 	public void setPattern(String pattern) {
 		this.patterns = StringUtils.tokenizeToStringArray(pattern, CONFIG_LOCATION_DELIMITERS);

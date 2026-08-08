@@ -21,6 +21,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Configuration properties for the CAS authentication filter and ticket-validation
+ * behavior, bound to the {@code cas.authc} prefix.
+ *
+ * @author [@Loong Wan](https://github.com/loong10k)
+ * @since 1.0.0
+ */
 @ConfigurationProperties(CasAuthcProperties.PREFIX)
 @Getter
 @Setter
