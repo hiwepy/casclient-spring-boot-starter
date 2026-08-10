@@ -17,21 +17,15 @@ package org.apereo.cas.spring.boot.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Configuration properties for the CAS {@code HttpServletRequestWrapperFilter}, bound to
  * the {@code cas.wrapper} prefix.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @ConfigurationProperties(CasWrapperProperties.PREFIX)
-@Getter
-@Setter
-@ToString
 public class CasWrapperProperties {
 
 	public static final String PREFIX = "cas.wrapper";
@@ -53,4 +47,13 @@ public class CasWrapperProperties {
 	 */
 	private boolean ignoreCase = false;
 
+
+	public boolean isEnabled() { return enabled; }
+	public void setEnabled(boolean enabled) { this.enabled = enabled; }
+	public String[] getPathPatterns() { return pathPatterns; }
+	public void setPathPatterns(String[] pathPatterns) { this.pathPatterns = pathPatterns; }
+	public String getRoleAttribute() { return roleAttribute; }
+	public void setRoleAttribute(String roleAttribute) { this.roleAttribute = roleAttribute; }
+	public boolean isIgnoreCase() { return ignoreCase; }
+	public void setIgnoreCase(boolean ignoreCase) { this.ignoreCase = ignoreCase; }
 }

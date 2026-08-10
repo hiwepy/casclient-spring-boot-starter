@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Configuration;
  * The configuration is activated only when the CAS {@code AuthenticationFilter} is on the
  * classpath and CAS integration is explicitly enabled.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @Configuration

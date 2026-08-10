@@ -18,9 +18,6 @@ package org.apereo.cas.spring.boot;
 import org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Configuration properties for the Apereo CAS client integration, bound to the
@@ -29,13 +26,10 @@ import lombok.ToString;
  * These properties drive the core CAS client behavior shared across the authentication,
  * ticket-validation and single sign-out filters.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @ConfigurationProperties(CasProperties.PREFIX)
-@Getter
-@Setter
-@ToString
 public class CasProperties {
 
 	/**
@@ -166,4 +160,53 @@ public class CasProperties {
 	private long timeout = DEFAULT_TIMEOUT;
 	
 
+
+	public boolean isEnabled() { return enabled; }
+	public void setEnabled(boolean enabled) { this.enabled = enabled; }
+	public String getLoginUrl() { return loginUrl; }
+	public void setLoginUrl(String loginUrl) { this.loginUrl = loginUrl; }
+	public String getLogoutUrl() { return logoutUrl; }
+	public void setLogoutUrl(String logoutUrl) { this.logoutUrl = logoutUrl; }
+	public String getRestUrl() { return restUrl; }
+	public void setRestUrl(String restUrl) { this.restUrl = restUrl; }
+	public String getPrefixUrl() { return prefixUrl; }
+	public void setPrefixUrl(String prefixUrl) { this.prefixUrl = prefixUrl; }
+	public String getFailureUrl() { return failureUrl; }
+	public void setFailureUrl(String failureUrl) { this.failureUrl = failureUrl; }
+	public String getArtifactParameterName() { return artifactParameterName; }
+	public void setArtifactParameterName(String artifactParameterName) { this.artifactParameterName = artifactParameterName; }
+	public boolean isAuthenticateAllArtifacts() { return authenticateAllArtifacts; }
+	public void setAuthenticateAllArtifacts(boolean authenticateAllArtifacts) { this.authenticateAllArtifacts = authenticateAllArtifacts; }
+	public boolean isArtifactParameterOverPost() { return artifactParameterOverPost; }
+	public void setArtifactParameterOverPost(boolean artifactParameterOverPost) { this.artifactParameterOverPost = artifactParameterOverPost; }
+	public boolean isAcceptAnyProxy() { return acceptAnyProxy; }
+	public void setAcceptAnyProxy(boolean acceptAnyProxy) { this.acceptAnyProxy = acceptAnyProxy; }
+	public String getAllowedProxyChains() { return allowedProxyChains; }
+	public void setAllowedProxyChains(String allowedProxyChains) { this.allowedProxyChains = allowedProxyChains; }
+	public String getEncoding() { return encoding; }
+	public void setEncoding(String encoding) { this.encoding = encoding; }
+	public boolean isEncodeServiceUrl() { return encodeServiceUrl; }
+	public void setEncodeServiceUrl(boolean encodeServiceUrl) { this.encodeServiceUrl = encodeServiceUrl; }
+	public boolean isEagerlyCreateSessions() { return eagerlyCreateSessions; }
+	public void setEagerlyCreateSessions(boolean eagerlyCreateSessions) { this.eagerlyCreateSessions = eagerlyCreateSessions; }
+	public CasProtocol getProtocol() { return protocol; }
+	public void setProtocol(CasProtocol protocol) { this.protocol = protocol; }
+	public boolean isGateway() { return gateway; }
+	public void setGateway(boolean gateway) { this.gateway = gateway; }
+	public String getLogoutParameterName() { return logoutParameterName; }
+	public void setLogoutParameterName(String logoutParameterName) { this.logoutParameterName = logoutParameterName; }
+	public boolean isRenew() { return renew; }
+	public void setRenew(boolean renew) { this.renew = renew; }
+	public String getRelayStateParameterName() { return relayStateParameterName; }
+	public void setRelayStateParameterName(String relayStateParameterName) { this.relayStateParameterName = relayStateParameterName; }
+	public String getServerCallbackUrl() { return serverCallbackUrl; }
+	public void setServerCallbackUrl(String serverCallbackUrl) { this.serverCallbackUrl = serverCallbackUrl; }
+	public String getServerName() { return serverName; }
+	public void setServerName(String serverName) { this.serverName = serverName; }
+	public String getService() { return service; }
+	public void setService(String service) { this.service = service; }
+	public String getServiceParameterName() { return serviceParameterName; }
+	public void setServiceParameterName(String serviceParameterName) { this.serviceParameterName = serviceParameterName; }
+	public long getTimeout() { return timeout; }
+	public void setTimeout(long timeout) { this.timeout = timeout; }
 }

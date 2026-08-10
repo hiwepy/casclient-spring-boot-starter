@@ -17,21 +17,15 @@ package org.apereo.cas.spring.boot.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Configuration properties for the CAS authentication filter and ticket-validation
  * behavior, bound to the {@code cas.authc} prefix.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @ConfigurationProperties(CasAuthcProperties.PREFIX)
-@Getter
-@Setter
-@ToString
 public class CasAuthcProperties {
 
 	public static final String PREFIX = "cas.authc";
@@ -130,4 +124,65 @@ public class CasAuthcProperties {
 	
 	/** The algorithm used by the proxyGrantingTicketStorageClass if it supports encryption. Defaults to DESede */
 	private String cipherAlgorithm;
+
+	public String[] getPathPatterns() { return pathPatterns; }
+	public void setPathPatterns(String[] pathPatterns) { this.pathPatterns = pathPatterns; }
+	public String getAuthenticationRedirectStrategyClass() { return authenticationRedirectStrategyClass; }
+	public void setAuthenticationRedirectStrategyClass(String authenticationRedirectStrategyClass) { this.authenticationRedirectStrategyClass = authenticationRedirectStrategyClass; }
+	public boolean isExceptionOnValidationFailure() { return exceptionOnValidationFailure; }
+	public void setExceptionOnValidationFailure(boolean exceptionOnValidationFailure) { this.exceptionOnValidationFailure = exceptionOnValidationFailure; }
+	public boolean isGateway() { return gateway; }
+	public void setGateway(boolean gateway) { this.gateway = gateway; }
+	public String getGatewayStorageClass() { return gatewayStorageClass; }
+	public void setGatewayStorageClass(String gatewayStorageClass) { this.gatewayStorageClass = gatewayStorageClass; }
+	public String getHostnameVerifier() { return hostnameVerifier; }
+	public void setHostnameVerifier(String hostnameVerifier) { this.hostnameVerifier = hostnameVerifier; }
+	public String getHostnameVerifierConfig() { return hostnameVerifierConfig; }
+	public void setHostnameVerifierConfig(String hostnameVerifierConfig) { this.hostnameVerifierConfig = hostnameVerifierConfig; }
+	public boolean isIgnoreCase() { return ignoreCase; }
+	public void setIgnoreCase(boolean ignoreCase) { this.ignoreCase = ignoreCase; }
+	public String getIgnorePattern() { return ignorePattern; }
+	public void setIgnorePattern(String ignorePattern) { this.ignorePattern = ignorePattern; }
+	public String getIgnoreUrlPatternType() { return ignoreUrlPatternType; }
+	public void setIgnoreUrlPatternType(String ignoreUrlPatternType) { this.ignoreUrlPatternType = ignoreUrlPatternType; }
+	public long getMillisBetweenCleanUps() { return millisBetweenCleanUps; }
+	public void setMillisBetweenCleanUps(long millisBetweenCleanUps) { this.millisBetweenCleanUps = millisBetweenCleanUps; }
+	public String getProxyCallbackUrl() { return proxyCallbackUrl; }
+	public void setProxyCallbackUrl(String proxyCallbackUrl) { this.proxyCallbackUrl = proxyCallbackUrl; }
+	public String getProxyReceptorUrl() { return proxyReceptorUrl; }
+	public void setProxyReceptorUrl(String proxyReceptorUrl) { this.proxyReceptorUrl = proxyReceptorUrl; }
+	public String getProxyGrantingTicketStorageClass() { return proxyGrantingTicketStorageClass; }
+	public void setProxyGrantingTicketStorageClass(String proxyGrantingTicketStorageClass) { this.proxyGrantingTicketStorageClass = proxyGrantingTicketStorageClass; }
+	public String[] getRequestWrapperFilterUrlPatterns() { return requestWrapperFilterUrlPatterns; }
+	public void setRequestWrapperFilterUrlPatterns(String[] requestWrapperFilterUrlPatterns) { this.requestWrapperFilterUrlPatterns = requestWrapperFilterUrlPatterns; }
+	public boolean isRedirectAfterValidation() { return redirectAfterValidation; }
+	public void setRedirectAfterValidation(boolean redirectAfterValidation) { this.redirectAfterValidation = redirectAfterValidation; }
+	public boolean isRenew() { return renew; }
+	public void setRenew(boolean renew) { this.renew = renew; }
+	public String getRelayStateParameterName() { return relayStateParameterName; }
+	public void setRelayStateParameterName(String relayStateParameterName) { this.relayStateParameterName = relayStateParameterName; }
+	public String getRoleAttribute() { return roleAttribute; }
+	public void setRoleAttribute(String roleAttribute) { this.roleAttribute = roleAttribute; }
+	public String getSecretKey() { return secretKey; }
+	public void setSecretKey(String secretKey) { this.secretKey = secretKey; }
+	public String getServerCallbackUrl() { return serverCallbackUrl; }
+	public void setServerCallbackUrl(String serverCallbackUrl) { this.serverCallbackUrl = serverCallbackUrl; }
+	public String getServerName() { return serverName; }
+	public void setServerName(String serverName) { this.serverName = serverName; }
+	public String getService() { return service; }
+	public void setService(String service) { this.service = service; }
+	public String getServiceParameterName() { return serviceParameterName; }
+	public void setServiceParameterName(String serviceParameterName) { this.serviceParameterName = serviceParameterName; }
+	public String getSslConfigFile() { return sslConfigFile; }
+	public void setSslConfigFile(String sslConfigFile) { this.sslConfigFile = sslConfigFile; }
+	public String[] getTicketValidationFilterUrlPatterns() { return ticketValidationFilterUrlPatterns; }
+	public void setTicketValidationFilterUrlPatterns(String[] ticketValidationFilterUrlPatterns) { this.ticketValidationFilterUrlPatterns = ticketValidationFilterUrlPatterns; }
+	public String getTicketValidatorClass() { return ticketValidatorClass; }
+	public void setTicketValidatorClass(String ticketValidatorClass) { this.ticketValidatorClass = ticketValidatorClass; }
+	public long getTolerance() { return tolerance; }
+	public void setTolerance(long tolerance) { this.tolerance = tolerance; }
+	public boolean isUseSession() { return useSession; }
+	public void setUseSession(boolean useSession) { this.useSession = useSession; }
+	public String getCipherAlgorithm() { return cipherAlgorithm; }
+	public void setCipherAlgorithm(String cipherAlgorithm) { this.cipherAlgorithm = cipherAlgorithm; }
 }

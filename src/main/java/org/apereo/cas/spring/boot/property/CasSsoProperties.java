@@ -17,21 +17,15 @@ package org.apereo.cas.spring.boot.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Configuration properties for the CAS single sign-out filter, bound to the
  * {@code cas.sso} prefix.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @ConfigurationProperties(CasSsoProperties.PREFIX)
-@Getter
-@Setter
-@ToString
 public class CasSsoProperties {
 
 	public static final String PREFIX = "cas.sso";
@@ -41,4 +35,7 @@ public class CasSsoProperties {
 	 */
 	private String[] pathPatterns = new String[] { "/*" };
 
+
+	public String[] getPathPatterns() { return pathPatterns; }
+	public void setPathPatterns(String[] pathPatterns) { this.pathPatterns = pathPatterns; }
 }

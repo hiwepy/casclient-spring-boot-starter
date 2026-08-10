@@ -17,21 +17,15 @@ package org.apereo.cas.spring.boot.property;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Configuration properties controlling which URLs the CAS filters should ignore, bound
  * to the {@code cas.ignore} prefix.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @ConfigurationProperties(CasIgnoreProperties.PREFIX)
-@Getter
-@Setter
-@ToString
 public class CasIgnoreProperties {
 
 	public static final String PREFIX = "cas.ignore";
@@ -43,4 +37,11 @@ public class CasIgnoreProperties {
 	/** Defines the type of the pattern specified. Defaults to REGEX. Other types are CONTAINS, EXACT. */
 	private String ignoreUrlPatternType = "REGEX";
 
+
+	public boolean isIgnoreCase() { return ignoreCase; }
+	public void setIgnoreCase(boolean ignoreCase) { this.ignoreCase = ignoreCase; }
+	public String getIgnorePattern() { return ignorePattern; }
+	public void setIgnorePattern(String ignorePattern) { this.ignorePattern = ignorePattern; }
+	public String getIgnoreUrlPatternType() { return ignoreUrlPatternType; }
+	public void setIgnoreUrlPatternType(String ignoreUrlPatternType) { this.ignoreUrlPatternType = ignoreUrlPatternType; }
 }

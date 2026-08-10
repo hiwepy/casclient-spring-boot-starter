@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
  * Multiple patterns may be supplied at once using the configured delimiters; the URL is
  * considered matched when it matches any one of the supplied patterns.</p>
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 public class AntUrlPatternMatcherStrategy implements UrlPatternMatcherStrategy {

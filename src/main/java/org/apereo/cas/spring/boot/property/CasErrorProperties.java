@@ -20,21 +20,15 @@ import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Configuration properties for the CAS {@code ErrorRedirectFilter}, bound to the
  * {@code cas.error} prefix.
  *
- * @author [@Loong Wan](https://github.com/loong10k)
+ * @author <a href="https://github.com/loong10k">Loong Wan</a>
  * @since 1.0.0
  */
 @ConfigurationProperties(CasErrorProperties.PREFIX)
-@Getter
-@Setter
-@ToString
 public class CasErrorProperties {
 
 	public static final String PREFIX = "cas.error";
@@ -56,4 +50,13 @@ public class CasErrorProperties {
 	  */
 	private Map<String /* Class Name */, String /* Redirect Page Path */> errorRedirectMappings = new LinkedHashMap<String, String>();
 
+
+	public boolean isEnabled() { return enabled; }
+	public void setEnabled(boolean enabled) { this.enabled = enabled; }
+	public String[] getPathPatterns() { return pathPatterns; }
+	public void setPathPatterns(String[] pathPatterns) { this.pathPatterns = pathPatterns; }
+	public String getErrorRedirectUrl() { return errorRedirectUrl; }
+	public void setErrorRedirectUrl(String errorRedirectUrl) { this.errorRedirectUrl = errorRedirectUrl; }
+	public Map<String /* Class Name */, String /* Redirect Page Path */> getErrorRedirectMappings() { return errorRedirectMappings; }
+	public void setErrorRedirectMappings(Map<String /* Class Name */, String /* Redirect Page Path */> errorRedirectMappings) { this.errorRedirectMappings = errorRedirectMappings; }
 }
